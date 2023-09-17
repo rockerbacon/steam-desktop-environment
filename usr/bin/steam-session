@@ -1,0 +1,26 @@
+#!/bin/bash
+
+config_file="$HOME/.config/session/wayland.conf"
+
+if [ -f "$config_file" ]; then
+	session=$(cat "$config_file")
+else
+	echo "No file '$config_file', falling back to steam session" >&2
+	session=steam
+fi
+
+case "$session" in
+	desktop)
+		export XDG_CURRENT_DESKTOP=GNOME
+		source /usr/bin/gnome-session
+	;;
+	steam)
+		export XDG_CURRENT_DESKTOP=Steam
+		source /usr/bin/steam-de
+	;;
+	*)
+		echo "Unknown session '$session'" >&2
+		exit 1
+	;;
+esac
+
