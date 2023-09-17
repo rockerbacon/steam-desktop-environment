@@ -1,0 +1,29 @@
+#!/bin/bash
+
+groups | grep autologin &>/dev/null
+is_in_autologin_group=$?
+
+if [ "$is_in_autologin_group" != "0" ]; then
+	echo "Only users in the autologin group can switch sessions" >&2
+	exit 1
+fi
+
+config_file="$HOME/.config/session/wayland.conf"
+if [ -f "$config_file" ]; then
+	current_session=$(cat "$config_file")
+else
+	echo "No file '$config_file', assuming desktop session" >&2
+	current_session=desktop
+fi
+
+if [ "$current_session" == "desktop" ]; then
+	echo steam > "$config_file"
+elif [ "$current_session" == "steam" ]; then
+	echo desktop > "$config_file"
+else
+	echo "Current session does not match any known sessions, switching to desktop" >&2
+	echo desktop > "$config_file"
+fi
+
+loginctl terminate-user "$USER"
+
