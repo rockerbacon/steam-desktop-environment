@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Source user configuration
+if [ -f "${config_dir}/gamescope/settings.cfg" ]; then
+    source "${config_dir}/gamescope/settings.cfg"
+fi
+
 /usr/bin/gamescope \
 	--cursor "${HOME}/.local/share/Steam/tenfoot/resource/images/cursors/arrow.png" \
 	--cursor-scale-height $(expr 2160 / ${GAMESCOPE_CURSOR_SCALE:-2}) \

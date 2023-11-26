@@ -1,0 +1,13 @@
+#!/usr/bin/bash
+
+if [ -n "$GAMESCOPE_WAYLAND_DISPLAY" ]; then
+	exit 0
+fi
+
+socket="${GAMESCOPE_STARTUP_SOCKET:?Gamescope startup socket not set}"
+read -r -t 30 display wl_display <> "$socket"
+if [ "$?" != "0" ]; then
+	echo "Gamescope startup timed out after 30 seconds" >&2
+	exit 1
+fi
+systemctl --user set-environment DISPLAY="$display" GAMESCOPE_WAYLAND_DISPLAY="$wl_display"
