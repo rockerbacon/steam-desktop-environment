@@ -2,6 +2,16 @@
 
 config_dir=${XDG_CONFIG_HOME:-$HOME/.config}
 
+# even though gamescope itself runs on wayland,
+# apps under gamescope should use XWayland
+export XDG_SESSION_TYPE=x11
+
+# don't create a desktop portal to avoid issues with some apps
+export XDG_DESKTOP_PORTAL_DIR=''
+
+# steam deck does this, I don't know why but let's keep it for now.
+unset DISPLAY XAUTHORITY
+
 # Fix intel color corruption
 # might come with some performance degradation but is better than a corrupted
 # color image
