@@ -1,9 +1,0 @@
-[Unit]
-Description=Initializes environment variables and creates mandatory folders and files for a Steam session
-Before=steam-session.target
-PartOf=steam-session.target
-
-[Service]
-ExecStart=/usr/bin/load-steam-session-environment
-RemainAfterExit=yes
-Type=oneshot
