@@ -1,6 +1,7 @@
 #!/bin/bash
 
-config_file="$HOME/.config/session/wayland.conf"
+config_dir=${XDG_CONFIG_HOME:-$HOME/.config}
+config_file="$config_dir/session/wayland.conf"
 
 if [ -f "$config_file" ]; then
 	session=$(cat "$config_file")
@@ -16,7 +17,7 @@ case "$session" in
 	;;
 	steam)
 		export XDG_CURRENT_DESKTOP=Steam
-		source /usr/bin/steam-de
+		source /usr/bin/start-steam-session
 	;;
 	*)
 		echo "Unknown session '$session'" >&2

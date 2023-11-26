@@ -1,0 +1,11 @@
+[Unit]
+Description=Standalone Gamescope compositor
+Before=steam-session.target
+PartOf=steam-session.target
+Requires=steam-session-environment.service
+After=steam-session-environment.service
+Wants=ibusd.service
+
+[Service]
+ExecStart=/usr/bin/start-gamescope-compositor
+Type=exec

@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Name=Steam
 Comment=Steam Big Picture session
-Exec=/usr/bin/steam-session
-TryExec=/usr/bin/steam-session
+Exec=/usr/bin/start-user-session
+TryExec=/usr/bin/start-user-session
 Type=Application
 DesktopNames=Steam

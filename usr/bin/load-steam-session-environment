@@ -1,0 +1,150 @@
+#!/bin/bash
+
+config_dir=${XDG_CONFIG_HOME:-$HOME/.config}
+
+# even though gamescope itself runs on wayland,
+# apps under gamescope should use XWayland
+systemctl set-environment XDG_SESSION_TYPE=x11
+
+# don't create a desktop portal to avoid issues with some apps
+systemctl set-environment XDG_DESKTOP_PORTAL_DIR=''
+
+# steam deck does this, I don't know why but let's keep it for now.
+systemctl unset-environment DISPLAY XAUTHORITY
+
+# Fix intel color corruption
+# might come with some performance degradation but is better than a corrupted
+# color image
+systemctl set-environment INTEL_DEBUG=norbc
+systemctl set-environment mesa_glthread=true
+
+# Show VRR controls in Steam
+systemctl set-environment STEAM_GAMESCOPE_VRR_SUPPORTED=1
+
+# Some environment variables by default (taken from Deck session)
+systemctl set-environment SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
+
+SESSION_RUNDIR=${XDG_RUNTIME_DIR/steamsession}
+mkdir "$SESSION_RUNDIR"
+systemctl set-environment SESSION_RUNDIR="$SESSION_RUNDIR"
+
+# Enable Mangoapp
+systemctl set-environment STEAM_MANGOAPP_PRESETS_SUPPORTED=1
+systemctl set-environment STEAM_USE_MANGOAPP=0
+systemctl set-environment MANGOHUD_CONFIGFILE="$SESSION_RUNDIR/mangohud.XXXXXXXX"
+
+systemctl set-environment STEAM_USE_DYNAMIC_VRS=1
+systemctl set-environment RADV_FORCE_VRS_CONFIG_FILE="$SESSION_RUNDIR/radv_vrs"
+
+# Plop GAMESCOPE_MODE_SAVE_FILE into $config_dir
+systemctl set-environment GAMESCOPE_MODE_SAVE_FILE="${config_dir}/gamescope/modes.cfg"
+systemctl set-environment GAMESCOPE_PATCHED_EDID_FILE="${config_dir}/gamescope/edid.bin"
+
+# Set up first time bootstrap status
+systemctl set-environment STEAM_BOOTSTRAP_CONFIG="${config_dir}/gamescope/bootstrap.cfg"
+
+# Make path to gamescope mode save file.
+mkdir -p "$(dirname "$GAMESCOPE_MODE_SAVE_FILE")"
+touch "$GAMESCOPE_MODE_SAVE_FILE"
+#echo "Making Gamescope Mode Save file at \"$GAMESCOPE_MODE_SAVE_FILE\""
+
+# Make path to Gamescope edid patched file.
+mkdir -p "$(dirname "$GAMESCOPE_PATCHED_EDID_FILE")"
+touch "$GAMESCOPE_PATCHED_EDID_FILE"
+#echo "Making Gamescope patched edid at \"$GAMESCOPE_PATCHED_EDID_FILE\""
+
+# Make path to Steam bootstrap config file.
+mkdir -p "$(dirname "$STEAM_BOOTSTRAP_CONFIG")"
+touch "$STEAM_BOOTSTRAP_CONFIG"
+
+# Support for gamescope tearing with GAMESCOPE_ALLOW_TEARING atom
+systemctl set-environment STEAM_GAMESCOPE_HAS_TEARING_SUPPORT=1
+
+# Enable tearing controls in steam
+systemctl set-environment STEAM_GAMESCOPE_TEARING_SUPPORTED=1
+
+# There is no way to set a color space for an NV12
+# buffer in Wayland. And the color management protocol that is
+# meant to let this happen is missing the color range...
+# So just workaround this with an ENV var that Remote Play Together
+# and Gamescope will use for now.
+systemctl set-environment GAMESCOPE_NV12_COLORSPACE=k_EStreamColorspace_BT601
+
+systemctl set-environment STEAM_GAMESCOPE_HDR_SUPPORTED=1
+
+# Initially write no_display to our config file
+# so we don't get mangoapp showing up before Steam initializes
+# on OOBE and stuff.
+mkdir -p "$(dirname "$MANGOHUD_CONFIGFILE")"
+echo "no_display" > "$MANGOHUD_CONFIGFILE"
+
+# Prepare our initial VRS config file
+# for dynamic VRS in Mesa.
+mkdir -p "$(dirname "$RADV_FORCE_VRS_CONFIG_FILE")"
+echo "1x1" > "$RADV_FORCE_VRS_CONFIG_FILE"
+
+# To expose vram info from radv
+systemctl set-environment WINEDLLOVERRIDES=dxgi=n
+
+# Workaround for steam getting killed immediatly during reboot
+systemctl set-environment STEAMOS_STEAM_REBOOT_SENTINEL="/tmp/steamos-reboot-sentinel"
+
+# Workaround for steam getting killed immediatly during shutdown
+# Same idea as reboot sentinel above
+systemctl set-environment STEAMOS_STEAM_SHUTDOWN_SENTINEL="/tmp/steamos-shutdown-sentinel"
+
+# Enable volume key management via steam for this session
+systemctl set-environment STEAM_ENABLE_VOLUME_HANDLER=1
+
+# Have SteamRT's xdg-open send http:// and https:// URLs to Steam
+systemctl set-environment SRT_URLOPEN_PREFER_STEAM=1
+
+# Disable automatic audio device switching in steam, now handled by wireplumber
+systemctl set-environment STEAM_DISABLE_AUDIO_DEVICE_SWITCHING=1
+
+# Enable support for xwayland isolation per-game in Steam
+systemctl set-environment STEAM_MULTIPLE_XWAYLANDS=1
+
+# We have the Mesa integration for the fifo-based dynamic fps-limiter
+systemctl set-environment STEAM_GAMESCOPE_DYNAMIC_FPSLIMITER=1
+
+# We have NIS support
+systemctl set-environment STEAM_GAMESCOPE_NIS_SUPPORTED=1
+
+# Don't wait for buffers to idle on the client side before sending them to gamescope
+systemctl set-environment vk_xwayland_wait_ready=false
+
+# Let steam know it cannot unmount drives without superuser privileges
+systemctl set-environment STEAM_ALLOW_DRIVE_UNMOUNT=0
+
+# We no longer need to set GAMESCOPE_EXTERNAL_OVERLAY from steam, mangoapp now does it itself
+systemctl set-environment STEAM_DISABLE_MANGOAPP_ATOM_WORKAROUND=1
+
+# Enable horizontal mangoapp bar
+systemctl set-environment STEAM_MANGOAPP_HORIZONTAL_SUPPORTED=1
+
+# Scaling support
+systemctl set-environment STEAM_GAMESCOPE_FANCY_SCALING_SUPPORT=1
+
+# Color management support
+# systemctl set-environment STEAM_GAMESCOPE_COLOR_MANAGED=1
+systemctl set-environment STEAM_GAMESCOPE_VIRTUAL_WHITE=1
+
+# Set input method modules for Qt/GTK that will show the Steam keyboard
+systemctl set-environment QT_IM_MODULE=steam
+systemctl set-environment GTK_IM_MODULE=Steam
+
+# To play nice with the short term callback-based limiter for now
+systemctl set-environment GAMESCOPE_LIMITER_FILE="$SESSION_RUNDIR/gamescope-limiter"
+
+# ulimit -n 524288
+
+# Source user environment
+if [ -f "${HOME}/.profile" ]; then
+    source "${HOME}/.profile"
+fi
+
+# Source user configurations
+if [ -f "${config_dir}/gamescope/settings.cfg" ]; then
+    source "${config_dir}/gamescope/settings.cfg"
+fi
