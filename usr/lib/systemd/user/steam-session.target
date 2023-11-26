@@ -1,0 +1,4 @@
+[Unit]
+Description=Steam session
+BindsTo=graphical-session.target
+Before=graphical-session.target

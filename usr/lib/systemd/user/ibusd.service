@@ -1,0 +1,8 @@
+[Unit]
+Description=Daemon program for IBus
+Before=steam-session.target
+PartOf=steam-session.target
+
+[Service]
+ExecStart=/usr/bin/ibus-daemon -d -r --panel=disable --emoji-extension=disable
+Type=exec

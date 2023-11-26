@@ -1,0 +1,23 @@
+#!/usr/bin/bash
+
+GAMESCOPE_STARTUP_SOCKET="$XDG_RUNTIME_DIR/gamescope-startup.socket"
+mkfifo -- "$GAMESCOPE_STARTUP_SOCKET"
+systemctl --user set-environment GAMESCOPE_STARTUP_SOCKET="$GAMESCOPE_STARTUP_SOCKET"
+
+systemctl --user start gamescope-compositor.service
+
+read -r -t 30 display wl_display <> "$GAMESCOPE_STARTUP_SOCKET"
+if [ "$?" != "0" ]; then
+	echo "Gamescope startup timed out after 30 seconds" >&2
+	exit 1
+fi
+
+systemctl --user set-environment DISPLAY="$display" GAMESCOPE_WAYLAND_DISPLAY="$wl_display"
+
+DISPLAY="$display" GAMESCOPE_WAYLAND_DISPLAY="$wl_display" \
+/usr/bin/steam -skipintro -gamepadui -steampal -steamos3 &
+steam_pid=$!
+
+systemctl --user start steam-session.target
+
+wait "$steam_pid"
