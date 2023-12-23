@@ -26,7 +26,7 @@ systemctl --user set-environment STEAM_GAMESCOPE_VRR_SUPPORTED=1
 # Some environment variables by default (taken from Deck session)
 systemctl --user set-environment SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
 
-SESSION_RUNDIR=${XDG_RUNTIME_DIR/steamsession}
+SESSION_RUNDIR=${XDG_RUNTIME_DIR:?Missing runtime dir}/steamsession
 mkdir -p "$SESSION_RUNDIR"
 systemctl --user set-environment SESSION_RUNDIR="$SESSION_RUNDIR"
 
@@ -122,6 +122,6 @@ systemctl --user set-environment GTK_IM_MODULE=Steam
 systemctl --user set-environment GAMESCOPE_LIMITER_FILE="$SESSION_RUNDIR/gamescope-limiter"
 
 # Socket for communicating when Gamescope is ready
-GAMESCOPE_STARTUP_SOCKET="$XDG_RUNTIME_DIR/gamescope-startup.socket"
+GAMESCOPE_STARTUP_SOCKET="$SESSION_RUNDIR/gamescope-startup.socket"
 mkfifo -- "$GAMESCOPE_STARTUP_SOCKET"
 systemctl --user set-environment GAMESCOPE_STARTUP_SOCKET="$GAMESCOPE_STARTUP_SOCKET"
