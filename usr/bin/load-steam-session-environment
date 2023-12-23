@@ -32,8 +32,8 @@ systemctl --user set-environment SESSION_RUNDIR="$SESSION_RUNDIR"
 
 # Enable Mangoapp
 MANGOHUD_CONFIGFILE="$SESSION_RUNDIR/mangohud"
-systemctl --user set-environment STEAM_MANGOAPP_PRESETS_SUPPORTED=1
-systemctl --user set-environment STEAM_USE_MANGOAPP=0
+#systemctl --user set-environment STEAM_MANGOAPP_PRESETS_SUPPORTED=1
+#systemctl --user set-environment STEAM_USE_MANGOAPP=0
 systemctl --user set-environment MANGOHUD_CONFIGFILE="$MANGOHUD_CONFIGFILE"
 echo "no_display" > "$MANGOHUD_CONFIGFILE"
 
@@ -102,7 +102,7 @@ systemctl --user set-environment vk_xwayland_wait_ready=false
 systemctl --user set-environment STEAM_ALLOW_DRIVE_UNMOUNT=0
 
 # We no longer need to set GAMESCOPE_EXTERNAL_OVERLAY from steam, mangoapp now does it itself
-systemctl --user set-environment STEAM_DISABLE_MANGOAPP_ATOM_WORKAROUND=1
+#systemctl --user set-environment STEAM_DISABLE_MANGOAPP_ATOM_WORKAROUND=1
 
 # Enable horizontal mangoapp bar
 systemctl --user set-environment STEAM_MANGOAPP_HORIZONTAL_SUPPORTED=1
@@ -121,7 +121,15 @@ systemctl --user set-environment GTK_IM_MODULE=Steam
 # To play nice with the short term callback-based limiter for now
 systemctl --user set-environment GAMESCOPE_LIMITER_FILE="$SESSION_RUNDIR/gamescope-limiter"
 
+# Temporary crutch until dummy plane interactions / etc are figured out
+systemctl --user set-environment GAMESCOPE_DISABLE_ASYNC_FLIPS=1
+
 # Socket for communicating when Gamescope is ready
 GAMESCOPE_STARTUP_SOCKET="$SESSION_RUNDIR/gamescope-startup.socket"
 mkfifo -- "$GAMESCOPE_STARTUP_SOCKET"
 systemctl --user set-environment GAMESCOPE_STARTUP_SOCKET="$GAMESCOPE_STARTUP_SOCKET"
+
+# Pipe for Gamescope statistics
+GAMESCOPE_STATS="$SESSION_RUNDIR/gamescope-stats.pipe"
+mkfifo -- "$GAMESCOPE_STATS"
+systemctl --user set-environment GAMESCOPE_STATS="$GAMESCOPE_STATS"
