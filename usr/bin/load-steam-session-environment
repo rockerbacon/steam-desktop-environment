@@ -32,8 +32,8 @@ systemctl --user set-environment SESSION_RUNDIR="$SESSION_RUNDIR"
 
 # Enable Mangoapp
 MANGOHUD_CONFIGFILE="$SESSION_RUNDIR/mangohud"
-#systemctl --user set-environment STEAM_MANGOAPP_PRESETS_SUPPORTED=1
-#systemctl --user set-environment STEAM_USE_MANGOAPP=0
+systemctl --user set-environment STEAM_MANGOAPP_PRESETS_SUPPORTED=1
+systemctl --user set-environment STEAM_USE_MANGOAPP=1
 systemctl --user set-environment MANGOHUD_CONFIGFILE="$MANGOHUD_CONFIGFILE"
 echo "no_display" > "$MANGOHUD_CONFIGFILE"
 
@@ -102,7 +102,7 @@ systemctl --user set-environment vk_xwayland_wait_ready=false
 systemctl --user set-environment STEAM_ALLOW_DRIVE_UNMOUNT=0
 
 # We no longer need to set GAMESCOPE_EXTERNAL_OVERLAY from steam, mangoapp now does it itself
-#systemctl --user set-environment STEAM_DISABLE_MANGOAPP_ATOM_WORKAROUND=1
+systemctl --user set-environment STEAM_DISABLE_MANGOAPP_ATOM_WORKAROUND=1
 
 # Enable horizontal mangoapp bar
 systemctl --user set-environment STEAM_MANGOAPP_HORIZONTAL_SUPPORTED=1
