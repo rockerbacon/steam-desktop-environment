@@ -1,0 +1,11 @@
+[Unit]
+Description=Mangoapp overlay for the Steam session
+Before=steam-session.target
+PartOf=steam-session.target
+Requires=gamescope-compositor.service
+After=gamescope-compositor.service
+
+[Service]
+ExecStartPre=/usr/bin/await-gamescope-ready
+ExecStart=/usr/bin/mangoapp
+Type=exec
