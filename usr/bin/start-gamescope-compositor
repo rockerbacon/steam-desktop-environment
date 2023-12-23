@@ -14,4 +14,5 @@ fi
 	--ready-fd "${GAMESCOPE_STARTUP_SOCKET:?Missing startup socket config}" \
 	--stats-path "${GAMESCOPE_STATS:?Missing statistics pipe config}" \
 	--steam \
-	--xwayland-count 2
+	--xwayland-count 2 \
+-- /usr/bin/mangoapp

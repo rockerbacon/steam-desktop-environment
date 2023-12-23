@@ -2,10 +2,11 @@
 Description=Steam Big Picture user interface
 Before=steam-session.target
 PartOf=steam-session.target
-Requires=mangoapp.service
-After=mangoapp.service
+Requires=gamescope-compositor.service
+After=gamescope-compositor.service
 Wants=ibusd.service
 
 [Service]
+ExecStartPre=/usr/bin/await-gamescope-ready
 ExecStart=/usr/bin/steam -skipintro -gamepadui -steampal -steamos3 -steamdeck
 Type=exec
