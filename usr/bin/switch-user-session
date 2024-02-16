@@ -26,4 +26,6 @@ else
 fi
 
 loginctl terminate-user "$USER"
+systemctl reset-failed gdm
+systemctl restart gdm
 

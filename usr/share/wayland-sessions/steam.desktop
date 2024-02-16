@@ -6,3 +6,4 @@ Exec=/usr/bin/start-user-session
 TryExec=/usr/bin/start-user-session
 Type=Application
 DesktopNames=Steam
+X-GDM-SessionRegisters=true

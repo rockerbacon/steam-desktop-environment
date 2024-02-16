@@ -12,7 +12,7 @@ systemctl --user set-environment XDG_SESSION_TYPE=x11
 systemctl --user set-environment XDG_DESKTOP_PORTAL_DIR=''
 
 # steam deck does this, I don't know why but let's keep it for now.
-systemctl --user unset-environment DISPLAY GAMESCOPE_WAYLAND_DISPLAY XAUTHORITY
+systemctl --user unset-environment DISPLAY GAMESCOPE_WAYLAND_DISPLAY WAYLAND_DISPLAY XAUTHORITY
 
 # Fix intel color corruption
 # might come with some performance degradation but is better than a corrupted

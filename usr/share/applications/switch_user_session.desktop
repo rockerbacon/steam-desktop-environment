@@ -1,5 +1,5 @@
 [Desktop Entry]
 Type=Application
 Name=Switch session
-Exec=switch-user-session
+Exec=bash -c 'echo "switch-user-session" | at now'
 Icon=system-log-out

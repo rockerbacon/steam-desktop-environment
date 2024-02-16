@@ -2,6 +2,8 @@
 
 set -x
 
+cp etc/polkit-1/rules.d/99-manage-gdm.rules /etc/polkit-1/rules.d/99-manage-gdm.rules
+
 cp usr/bin/await-gamescope-ready /usr/bin/await-gamescope-ready
 cp usr/bin/load-steam-session-environment /usr/bin/load-steam-session-environment
 cp usr/bin/start-gamescope-compositor /usr/bin/start-gamescope-compositor
