@@ -1,5 +1,11 @@
 #!/usr/bin/bash
 
+gdbus call --system \
+	--dest 'org.gnome.DisplayManager' \
+	--object-path '/org/gnome/DisplayManager/Manager' \
+	--method 'org.gnome.DisplayManager.Manager.RegisterSession' \
+	'{}' > /dev/null
+
 source /usr/bin/load-steam-session-environment
 
 systemctl --user start steam-ui.service
@@ -7,3 +13,5 @@ systemctl --user start steam-session.target
 
 sleep 60 # give Steam some time to startup
 pidwait steam
+
+systemctl --user unset-environment XDG_DESKTOP_PORTAL_DIR
