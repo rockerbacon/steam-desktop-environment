@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# This is here solely because the Steam client requires it
+# There's no need to do anything, though
+exit 0

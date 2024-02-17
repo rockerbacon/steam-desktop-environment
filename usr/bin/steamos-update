@@ -1,0 +1,56 @@
+#!/bin/bash
+
+UPDATES_AVAILABLE=0
+NO_UPDATES_AVAILABLE=7
+
+if ! command -v dnf >/dev/null; then
+  echo "ERROR: only DNF is supported" &>2
+  exit $NO_UPDATES_AVAILABLE
+fi
+
+check_only=0
+exit_early=0
+
+until [ -z "$1" ]; do
+  case "$1" in
+    check)
+      check_only=1
+      shift
+    ;;
+    --supports-duplicate-detection)
+      exit_early=1
+      shift
+    ;;
+    *)
+      # skip unknown args
+      shift
+    ;;
+  esac
+done
+
+if [ "$exit_early" == "1" ]; then
+  exit 0
+fi
+
+if [ "$check_only" == "1" ]; then
+  echo "Checking updates. Please wait..."
+  upgrade_list=$(dnf --quiet check-upgrade)
+  upgrade_status=$?
+
+  if [ "$upgrade_status" == "100" ]; then
+    pkgs_count=$(echo "$upgrade_list" | wc -l)
+    echo "$pkgs_count packages can be updated"
+    exit "$UPDATES_AVAILABLE"
+  else
+    echo "No updates available"
+    exit "$NO_UPDATES_AVAILABLE"
+  fi
+fi
+
+set -e
+echo '0%' # progress feedback
+echo '50%' # progress feedback
+dnf -y offline-upgrade download &>/dev/null
+echo '100%' # progress feedback
+dnf -y offline-upgrade reboot &>/dev/null
+
