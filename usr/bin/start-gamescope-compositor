@@ -5,12 +5,19 @@ if [ -f "${config_dir}/gamescope/settings.cfg" ]; then
     source "${config_dir}/gamescope/settings.cfg"
 fi
 
-/usr/bin/gamescope \
-	--cursor "${HOME}/.local/share/Steam/tenfoot/resource/images/cursors/arrow.png" \
-	--cursor-scale-height $(expr 2160 / ${GAMESCOPE_CURSOR_SCALE:-2}) \
-	--adaptive-sync \
-	--fade-out-duration 200 \
-	--hide-cursor-delay 3000 \
-	--ready-fd "${GAMESCOPE_STARTUP_SOCKET:?Missing startup socket config}" \
-	--steam \
-	--xwayland-count 2
+args=( \
+    --cursor-scale-height $(expr 2160 / ${GAMESCOPE_CURSOR_SCALE:-2}) \
+    --adaptive-sync \
+    --fade-out-duration 200 \
+    --hide-cursor-delay 3000 \
+    --ready-fd "${GAMESCOPE_STARTUP_SOCKET:?Missing startup socket config}" \
+    --steam \
+    --xwayland-count 2 \
+)
+
+cursor_file="$HOME/.local/share/Steam/tenfoot/resource/images/cursors/arrow.png"
+if [ -f "$cursor_file" ]; then
+    args+=(--cursor "$cursor_file")
+fi
+
+/usr/bin/gamescope "${args[@]}"
