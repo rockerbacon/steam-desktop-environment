@@ -8,6 +8,10 @@ gdbus call --system \
 
 source /usr/bin/load-steam-session-environment
 
+# GDM is starting autologin too fast and Gamescope is segfaulting because of it
+# this small delay should be enough for now, but a better solution should be devised later
+sleep 3
+
 systemctl --user start steam-ui.service
 systemctl --user start steam-session.target
 
