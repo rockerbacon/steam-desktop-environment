@@ -1,0 +1,11 @@
+[Unit]
+Description=Mangoapp overlay
+Before=steam-session.target
+PartOf=steam-session.target
+Requires=gamescope-compositor.service ibusd.service
+After=gamescope-compositor.service ibusd.service
+
+[Service]
+ExecStartPre=/usr/bin/await-gamescope-ready
+ExecStart=/usr/bin/mangoapp
+Type=exec

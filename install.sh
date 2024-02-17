@@ -20,6 +20,7 @@ cp usr/bin/switch-user-session /usr/bin/switch-user-session
 
 cp usr/lib/systemd/user/gamescope-compositor.service /usr/lib/systemd/user/gamescope-compositor.service
 cp usr/lib/systemd/user/ibusd.service /usr/lib/systemd/user/ibusd.service
+cp usr/lib/systemd/user/mangoapp.service /usr/lib/systemd/user/mangoapp.service
 cp usr/lib/systemd/user/steam-session.target /usr/lib/systemd/user/steam-session.target
 cp usr/lib/systemd/user/steam-ui.service /usr/lib/systemd/user/steam-ui.service
 

@@ -33,7 +33,7 @@ systemctl --user set-environment SESSION_RUNDIR="$SESSION_RUNDIR"
 # Enable Mangoapp
 MANGOHUD_CONFIGFILE="$SESSION_RUNDIR/mangohud"
 systemctl --user set-environment STEAM_MANGOAPP_PRESETS_SUPPORTED=1
-systemctl --user set-environment STEAM_USE_MANGOAPP=0
+systemctl --user set-environment STEAM_USE_MANGOAPP=1
 systemctl --user set-environment MANGOHUD_CONFIGFILE="$MANGOHUD_CONFIGFILE"
 echo "no_display" > "$MANGOHUD_CONFIGFILE"
 
